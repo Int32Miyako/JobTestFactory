@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "async-request": "^1.2.0",
+    "crypto": "^1.0.1",
+    "express": "^4.19.2",
+    "follow-redirects": "^1.15.6",
+    "request": "^2.88.2"
+  }
+}

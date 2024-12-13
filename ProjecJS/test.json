@@ -1,0 +1,189 @@
+[
+    {        
+        "_id": "5973782bdb9a930533b05cb2",
+        "isActive": true,
+        "balance": "$1,446.35",
+        "age": 28,
+        "eyeColor": "red",
+        "name": "Carol Martin",
+        "gender": "male",
+        "company": "ARTIQ",
+        "email": "logankeller@artiq.com",
+        "phone": "+1 (952) 433-2258",
+        "friends": [
+            {
+            "id": 0,
+            "name": "Colon Salazar"
+            }
+        ],
+        "favoriteFruit": "banana"
+    },
+    {        
+        "_id": "5973782bdb9a930533b05cb2",
+        "isActive": true,
+        "balance": "$5,445.2",
+        "age": 19,
+        "eyeColor": "green",
+        "name": "Green Bellan",
+        "gender": "male",
+        "company": "ARTIQ",
+        "email": "logankeller@artiq.com",
+        "phone": "+1 (952) 222-2258",
+        "friends": [],
+        "favoriteFruit": "banana"
+    },
+    {        
+        "_id": "5973782bdb9a930533b05cb2",
+        "isActive": true,
+        "balance": "$10,446.35",
+        "age": 45,
+        "eyeColor": "green",
+        "name": "Colon Salazar",
+        "gender": "male",
+        "company": "ARTIQ",
+        "email": "logankeller@artiq.com",
+        "phone": "+1 (952) 533-5657",
+        "friends": [
+            {
+            "id": 1,
+            "name": "French Mcneil"
+            },
+            {
+            "id": 2,
+            "name": "Carol Martin"
+            }
+        ],
+        "favoriteFruit": "banana"
+    },
+    {        
+        "_id": "5973782bdb9a930533b05cb2",
+        "isActive": true,
+        "balance": "$4,446.35",
+        "age": 37,
+        "eyeColor": "brown",
+        "name": "French Mcneil",
+        "gender": "male",
+        "company": "ARTIQ",
+        "email": "logankeller@artiq.com",
+        "phone": "+1 (952) 533-6263",
+        "friends": [
+            {
+            "id": 0,
+            "name": "Colon Salazar"
+            },              
+            {
+            "id": 2,
+            "name": "Carol Martin"
+            }
+        ],
+        "favoriteFruit": "banana"
+    },
+    {        
+        "_id": "5973782bdb9a930533b05cb2",
+        "isActive": true,
+        "balance": "$1,346.35",
+        "age": 32,
+        "eyeColor": "blue",
+        "name": "Morgan Keller",
+        "gender": "male",
+        "company": "ARTIQ",
+        "email": "logankeller@artiq.com",
+        "phone": "+1 (952) qs2424",
+        "friends": [
+            {
+            "id": 0,
+            "name": "Colon Salazar"
+            },
+            {
+            "id": 1,
+            "name": "French Mcneil"
+            },
+            {
+            "id": 2,
+            "name": "Carol Martin"
+            }
+        ],
+        "favoriteFruit": "banana"
+    },
+    {        
+        "_id": "5973782bdb9a930533b05cb2",
+        "isActive": true,
+        "balance": "$900",
+        "age": 31,
+        "eyeColor": "brown",
+        "name": "Carol Meller",
+        "gender": "male",
+        "company": "ARTIQ",
+        "email": "logankeller@artiq.com",
+        "phone": "+1 (ffff) 233-2258",
+        "friends": [
+            {
+            "id": 0,
+            "name": "Colon Salazar"
+            },
+            {
+            "id": 1,
+            "name": "French Mcneil"
+            },
+            {
+            "id": 2,
+            "name": "Carol Martin"
+            }
+        ],
+        "favoriteFruit": "banana"
+    },
+    {        
+        "_id": "5973782bdb9a930533b05cb2",
+        "isActive": false,
+        "balance": "$1,446.35",
+        "age": 33,
+        "eyeColor": "green",
+        "name": "Logan Mcneil",
+        "gender": "male",
+        "company": "ARTIQ",
+        "email": "logankeller@artiq.com",
+        "phone": "+1 (931) 533-2258",
+        "friends": [
+            {
+            "id": 0,
+            "name": "Colon Salazar"
+            },
+            {
+            "id": 1,
+            "name": "French Mcneil"
+            },
+            {
+            "id": 2,
+            "name": "Carol Martin"
+            }
+        ],
+        "favoriteFruit": "banana" 
+    },
+    {        
+        "_id": "5973782bdb9a930533b05cb2",
+        "isActive": false,
+        "balance": "$1,446.35",
+        "age": 35,
+        "eyeColor": "red",
+        "name": "Rogan Keller",
+        "gender": "male",
+        "company": "ARTIQ",
+        "email": "logankeller@artiq.com",
+        "phone": "+1 (952) 533-2258",
+        "friends": [
+            {
+            "id": 0,
+            "name": "Colon Salazar"
+            },
+            {
+            "id": 1,
+            "name": "French Mcneil"
+            },
+            {
+            "id": 2,
+            "name": "Carol Martin"
+            }
+        ],
+        "favoriteFruit": "banana"
+    }
+  ]
