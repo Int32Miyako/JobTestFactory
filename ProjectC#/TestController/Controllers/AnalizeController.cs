@@ -10,8 +10,7 @@ namespace TestController.Controllers
         [HttpPost("GetAnalize")]
         public async Task<List<OutputAnalizeData>> GetAnalizeTest([FromBody] List<Employee> employees)
         {
-
-            var output = CreateOutputEmployeesOnActive(employees);
+            var output = await CreateOutputEmployeesOnActive(employees);
             
             return output;
         }
@@ -21,36 +20,31 @@ namespace TestController.Controllers
         /// </summary>
         /// <param name="employees"></param>
         /// <returns></returns>
-        private List<OutputAnalizeData> CreateOutputEmployeesOnActive(List<Employee> employees)
+        private async Task<List<OutputAnalizeData>> CreateOutputEmployeesOnActive(List<Employee> employees)
         {
-            var outputAnalizeDataOfAllEmployers = new List<OutputAnalizeData>();
+            var friendCouples = await FindEmployeeFriendCouples(employees);
             
-            foreach (var employee in employees)
+            var tasks = employees.Select(async employee =>
             {
-                var outputAnalizeData = new OutputAnalizeData
+                return new OutputAnalizeData
                 {
                     Name = employee.Name,
-                    Phone =
-                        IsPhoneNumberOfEmployeeCorrect(employee) ? employee.Phone : "Номер телефона содержит ошибки",
-                    Email = IsEmailOfEmployeeCorrect(employee) ? employee.Email : "Почта содержит ошибки",
-                    NumberOfFriends = employee.Friends!.Count,
-                    EmployeeFriendCouples = FindEmployeeFriendCouples(employees)
+                    Phone = await IsPhoneNumberOfEmployeeCorrectAsync(employee) ? employee.Phone : "Номер телефона содержит ошибки",
+                    Email = await IsEmailOfEmployeeCorrect(employee) ? employee.Email : "Почта содержит ошибки",
+                    NumberOfFriends = employee.Friends?.Count ?? 0,
+                    EmployeeFriendCouples = friendCouples
                         .FirstOrDefault(e => e.Split(" - ")[0] == employee.Name)
                 };
-                
-                outputAnalizeDataOfAllEmployers.Add(outputAnalizeData);
-            }
-            var activeEmployees = employees.Where(row => row.IsActive).ToList();
-            
-            
-            outputAnalizeDataOfAllEmployers = outputAnalizeDataOfAllEmployers
-                .Where(e => activeEmployees
-                    .Any(a => e.Name!.Split(" - ")[0] == a.Name))
-                .ToList();
+            });
 
-            
-            return outputAnalizeDataOfAllEmployers;
+            var outputAnalizeDataOfAllEmployers = (await Task.WhenAll(tasks)).ToList();
+
+            var activeEmployees = employees.Where(row => row.IsActive).Select(a => a.Name).ToList();
+            return outputAnalizeDataOfAllEmployers
+                .Where(e => activeEmployees.Contains(e.Name!.Split(" - ")[0]))
+                .ToList();
         }
+
         
         
         /// <summary>
@@ -59,33 +53,39 @@ namespace TestController.Controllers
         /// </summary>
         /// <param name="employee"></param>
         /// <returns>Верно ли написан номер</returns>
-        private bool IsPhoneNumberOfEmployeeCorrect(Employee employee)
+        private async Task<bool> IsPhoneNumberOfEmployeeCorrectAsync(Employee employee)
         {
-            var phoneNumber = employee.Phone;
-            if (string.IsNullOrWhiteSpace(phoneNumber)
-                || string.Concat(phoneNumber.Where(char.IsLetter)).Length > 0 
-                || string.Concat(phoneNumber.Where(char.IsDigit)).Length != 11)
+            return await Task.Run(() =>
             {
-                return false;
-            }
+                var phoneNumber = employee.Phone;
+                if (string.IsNullOrWhiteSpace(phoneNumber)
+                    || string.Concat(phoneNumber.Where(char.IsLetter)).Length > 0
+                    || string.Concat(phoneNumber.Where(char.IsDigit)).Length != 11)
+                {
+                    return false;
+                }
 
-            const string mask = "+1 (XXX) XXX-XXXX";
-            const string allowedChars = " ()-";
-            var maskedNumber = new char[phoneNumber.Length];
-            maskedNumber[0] = '+'; maskedNumber[1] = '1';
-            for (var i = 2; i < phoneNumber.Length; i++)
-            {
-                if (allowedChars.Contains(phoneNumber[i]))
+                const string mask = "+1 (XXX) XXX-XXXX";
+                const string allowedChars = " ()-";
+                
+                var maskedNumber = new char[phoneNumber.Length];
+                maskedNumber[0] = '+';
+                maskedNumber[1] = '1';
+                for (var i = 2; i < phoneNumber.Length; i++)
                 {
-                    maskedNumber[i] = phoneNumber[i];
+                    if (allowedChars.Contains(phoneNumber[i]))
+                    {
+                        maskedNumber[i] = phoneNumber[i];
+                    }
+                    else
+                    {
+                        maskedNumber[i] = 'X';
+                    }
                 }
-                else
-                {
-                    maskedNumber[i] = 'X';
-                }
-            }
+
+                return mask == string.Concat(maskedNumber);
+            });
             
-            return mask == string.Concat(maskedNumber);
         }
 
         /// <summary>
@@ -93,19 +93,23 @@ namespace TestController.Controllers
         /// </summary>
         /// <param name="employee"></param>
         /// <returns>Верно ли написана почта</returns>
-        private bool IsEmailOfEmployeeCorrect(Employee employee)
+        private async Task<bool> IsEmailOfEmployeeCorrect(Employee employee)
         {
-            var emailOfEmployee = employee.Email;
-            if (string.IsNullOrWhiteSpace(emailOfEmployee)) return false;
+            return await Task.Run(() =>
+            {
+                var emailOfEmployee = employee.Email;
+                if (string.IsNullOrWhiteSpace(emailOfEmployee)) return false;
+                
+                char[] notAllowedChars = { '+', '@', '#' , '!', '*', '&', '(',  ')' };
+                const string domain = "@artiq.com";
+                var atIndex = emailOfEmployee.IndexOf(domain, StringComparison.Ordinal);
+                var prefix = emailOfEmployee.Substring(0, atIndex);
             
-            char[] notAllowedChars = { '+', '@', '#' , '!', '*', '&', '(',  ')' };
-            const string domain = "@artiq.com";
-            var atIndex = emailOfEmployee.IndexOf(domain, StringComparison.Ordinal);
-            var prefix = emailOfEmployee.Substring(0, atIndex);
+                return !prefix.Any(charOfPrefix => notAllowedChars.Any(charOfNotAllowedChars 
+                           => charOfNotAllowedChars == charOfPrefix))
+                       && emailOfEmployee.EndsWith("@artiq.com");
+            });
             
-            return !prefix.Any(charOfPrefix => notAllowedChars.Any(charOfNotAllowedChars 
-                => charOfNotAllowedChars == charOfPrefix))
-                   && emailOfEmployee.EndsWith("@artiq.com");
         }
         
 
@@ -113,60 +117,71 @@ namespace TestController.Controllers
         /// Ищем дружеские пары сотрудников
         /// </summary>
         /// <returns>Возвращает список дружеских пар для каждого из сотрудников в виде dictionary</returns>
-        private List<string> FindEmployeeFriendCouples(List<Employee> employees)
+        private async Task<List<string>> FindEmployeeFriendCouples(List<Employee> employees)
         {
-            var listOfEmployersFriendsCouples = new List<string>();
-
-            // Пробегаемся по каждому из сотрудников
-            foreach (var employee in employees)
+            return await Task.Run(() =>
             {
-                var isFind = false;
-              
-                if (employee.Friends == null || employee.Friends.Count == 0)
-                {
-                    listOfEmployersFriendsCouples.Add(employee.Name! + " - Нет друзей");
-                    continue;
-                }
+                var listOfEmployersFriendsCouples = new List<string>();
 
-                // Пробегаемся по листу друзей сотрудника
-                foreach (var friendOfEmployee in employee.Friends)
+                // Пробегаемся по каждому из сотрудников
+                foreach (var employee in employees)
                 {
-                    var friend = employees.FirstOrDefault(e => e.Name == friendOfEmployee.Name);
+                    var isFind = false;
 
-                    if (friend != null && friend.Friends != null)
+                    if (employee.Friends == null || employee.Friends.Count == 0)
                     {
-                        // Проверяем, является ли этот друг другом сотрудника
-                        if (friend.Friends.Any(f => f.Name == employee.Name))
+                        listOfEmployersFriendsCouples.Add(employee.Name! + " - Нет друзей");
+                        continue;
+                    }
+
+                    // Пробегаемся по листу друзей сотрудника
+                    foreach (var friendOfEmployee in employee.Friends)
+                    {
+                        var friend = employees.FirstOrDefault(e => e.Name == friendOfEmployee.Name);
+
+                        if (friend != null && friend.Friends != null)
                         {
-                            var pair = employee.Name + " - " + friendOfEmployee.Name;
-                            
-                            isFind = true;
-                            listOfEmployersFriendsCouples.Add(pair);
+                            // Проверяем, является ли этот друг другом сотрудника
+                            if (friend.Friends.Any(f => f.Name == employee.Name))
+                            {
+                                var pair = employee.Name + " - " + friendOfEmployee.Name;
+
+                                isFind = true;
+                                listOfEmployersFriendsCouples.Add(pair);
+                            }
                         }
                     }
+
+                    if (!isFind) listOfEmployersFriendsCouples.Add($"{employee.Name} - Дружеские пары отсутствуют");
+                }
+
+                
+                
+                for (var i = 0; i < listOfEmployersFriendsCouples.Count; i++)
+                {
+                    var leftNameI = listOfEmployersFriendsCouples[i].Split(" - ")[0];
+                    
+                    
+                    for (var j = 1 + i; j < listOfEmployersFriendsCouples.Count; j++)
+                    {
+                        var leftNameJ = listOfEmployersFriendsCouples[j].Split(" - ")[0];
+                        
+                        
+                        if (i != j && leftNameI == leftNameJ)
+                        {
+                            listOfEmployersFriendsCouples[j] =
+                                listOfEmployersFriendsCouples[i] + ", " + listOfEmployersFriendsCouples[j];
+
+                            listOfEmployersFriendsCouples.RemoveAt(i);
+                        }
+                        
+                    }
+                    
                 }
                 
-                if(!isFind) listOfEmployersFriendsCouples.Add($"{employee.Name} - Дружеские пары отсутствуют");
-            }
-
-            // соединяем повторения
-            for (var i = 0; i < listOfEmployersFriendsCouples.Count; i++)
-            {
-                var leftNameI = listOfEmployersFriendsCouples[i].Split(" - ")[0];
-                for (var j = 1 + i; j < listOfEmployersFriendsCouples.Count; j++)
-                {
-                    var leftNameJ = listOfEmployersFriendsCouples[j].Split(" - ")[0];
-                    if (i != j && leftNameI == leftNameJ)
-                    {
-                        listOfEmployersFriendsCouples[j] =
-                            listOfEmployersFriendsCouples[i] + ", " + listOfEmployersFriendsCouples[j];
-                        
-                        listOfEmployersFriendsCouples.RemoveAt(i);
-                    }
-                }
-            }
-            
-            return listOfEmployersFriendsCouples;
+                
+                return listOfEmployersFriendsCouples;
+            });
         }
     }
 }

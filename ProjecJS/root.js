@@ -23,12 +23,31 @@ function getAnalize(data) {
             
             if(body) {
                 console.log(JSON.parse(body));
-                // createResponseFile(JSON.parse(body));       
+                createResponseFile(JSON.parse(body));     
             }  
         }
     );
 }
 
+function createResponseFile(data) {
+    const filePath = './answer.txt';
+
+    const answer = data.map(entry => {
+        return `Имя: ${entry.name}\n
+        Номер телефона: ${entry.phone}\n
+        Почта: ${entry.email}\n
+        Количество друзей: ${entry['number-of-friends']}\n
+        Дружеские пары: ${entry['employee-friends-couples']}\n`;
+    }).join('\n');
+
+    fs.writeFile(filePath, answer, (err) => {
+        if (err) {
+            console.error('Ошибка при записи файла:', err);
+        } else {
+            console.log('Файл успешно создан/перезаписан:', filePath);
+        }
+    });
+}
 
 // Функция для начала программы
 function root() {

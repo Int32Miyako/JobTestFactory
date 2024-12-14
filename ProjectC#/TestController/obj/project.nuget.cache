@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "LQr3S1MODOM=",
+  "dgSpecHash": "BZn2CYDrW1I=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Богдан\\Desktop\\JobTest\\JobTest\\ProjectC#\\TestController\\TestController.csproj",
+  "projectFilePath": "D:\\GitHub\\JobTest\\ProjectC#\\TestController\\TestController.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Богдан\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
     "C:\\Users\\Богдан\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",

@@ -1,0 +1,59 @@
+Имя: Carol Martin
+
+        Номер телефона: +1 (952) 433-2258
+
+        Почта: logankeller@artiq.com
+
+        Количество друзей: 1
+
+        Дружеские пары: Carol Martin - Colon Salazar
+
+Имя: Green Bellan
+
+        Номер телефона: +1 (952) 222-2258
+
+        Почта: logankeller@artiq.com
+
+        Количество друзей: 0
+
+        Дружеские пары: Green Bellan - Нет друзей
+
+Имя: Colon Salazar
+
+        Номер телефона: +1 (952) 533-5657
+
+        Почта: logankeller@artiq.com
+
+        Количество друзей: 2
+
+        Дружеские пары: Colon Salazar - French Mcneil, Colon Salazar - Carol Martin
+
+Имя: French Mcneil
+
+        Номер телефона: +1 (952) 533-6263
+
+        Почта: logankeller@artiq.com
+
+        Количество друзей: 2
+
+        Дружеские пары: French Mcneil - Colon Salazar
+
+Имя: Morgan Keller
+
+        Номер телефона: Номер телефона содержит ошибки
+
+        Почта: logankeller@artiq.com
+
+        Количество друзей: 3
+
+        Дружеские пары: Morgan Keller - Дружеские пары отсутствуют
+
+Имя: Carol Meller
+
+        Номер телефона: Номер телефона содержит ошибки
+
+        Почта: logankeller@artiq.com
+
+        Количество друзей: 3
+
+        Дружеские пары: Carol Meller - Дружеские пары отсутствуют
